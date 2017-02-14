@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta id="viewport" name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+<meta charset="utf-8">
+<title>Thuis.net</title>
+
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet"> 
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+<style>
+html, body {padding:0; margin:0; width:100%; height:100%; background:#f1f2f3; scroll-behavior: smooth; font:400 'Open Sans', sans-serif; color:#333;}
+#wrapper {width:100%; min-width:320px;
+  display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between;
+}
+#header {order:1; width:100%; background:#fff; margin-bottom:20px; border-bottom:1px solid #ccc; position:relative;}
+#header img {display:block; height:110px; position:absolute; left:10px; top:4px;}
+#header h1 {text-align:center; font:700 45px/60px 'Open Sans', sans-serif; color:#2ab;}
+#header h1 span {text-align:center; font:300 45px/60px 'Open Sans', sans-serif; color:#333;}
+
+#menuPanel {display:none;}
+#header .menu {display:block; width:41px; height:41px; background:#333; position:absolute; right:20px; top:20px; cursor:pointer; z-index:20;}
+#header .menu .bar {display:block; width:17px; height:3px; background:#fff; position:absolute; left:12px; top:19px; transition: background 0.3s;}
+#header .menu .bar::before {content:""; display:block; width:17px; height:3px; background:#fff; position:absolute; left:0; top:-6px; transform-origin:left top; transition: 0.3s;}
+#header .menu .bar::after {content:""; display:block; width:17px; height:3px; background:#fff; position:absolute; left:0; top:6px; transform-origin:left bottom; transition: 0.3s;}
+#menuPanel:checked ~ #wrapper {height:100%; overflow:hidden;}
+#menuPanel:checked ~ #wrapper #header .menu .bar {background:transparent;}
+#menuPanel:checked ~ #wrapper #header .menu .bar::before {transform: rotate(45deg); width:18px; left:3px;}
+#menuPanel:checked ~ #wrapper #header .menu .bar::after {transform: rotate(-45deg); width:18px; left:3px;}
+
+#menuBox {width:100%; height:100%; background:#fff; position:fixed; left:-100%; top:0; z-index:10; transition:0.3s;
+  display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between;
+}
+#menuBox #menuLeft {width:50%; height:100%; background:#333;
+  display:flex; flex-direction:column; flex-wrap:nowrap; justify-content:center;
+}
+#menuBox #menuLeft h1 {text-align:center; font:700 45px/60px 'Open Sans', sans-serif; color:#2ab;}
+#menuBox #menuLeft #social {text-align:center; width:100%;}
+#menuBox #menuLeft .social {color:#888; display:inline-block; font-size:20px; margin:5px; transition:0.2s;}
+#menuBox #menuLeft .social:hover {color:#666;}
+#menuBox #menuLeft p {font:300 14px/25px 'Open Sans', sans-serif; color:#ccc; text-align:center;}
+
+#menuBox #menuRight {width:50%; height:100%; background:#fff; overflow-y:auto; -webkit-overflow-scrolling: touch;
+  display:flex; flex-direction:column; flex-wrap:nowrap; justify-content:center;
+}
+#menuBox #menuRight ul {width:200px; padding:0; list-style:none; margin:0 auto;}
+#menuBox #menuRight ul li {font:700 25px/55px 'Open Sans', sans-serif;}
+#menuBox #menuRight ul li a {text-decoration:none; color:#333; margin-left:30px; position:relative; transition:0.3s;}
+#menuBox #menuRight ul li a:hover {color:#2ab;}
+#homepage #menuBox #menuRight ul li a.home {color:#2ab; margin-left:0;}
+#homepage #menuBox #menuRight ul li a.home::before {content:""; display:inline-block; width:20px; height:4px; background:#2ab; vertical-align:middle; margin-right:10px;}
+#menuPanel:checked ~ #wrapper #header #menuBox {left:0;}
+
+#footer {order:4; width:100%; background:#fff; border-top:1px solid #ccc; position:relative;}
+#footer h3 {text-align:center; font:300 15px/25px 'Open Sans', sans-serif; color:#333; padding:20px 0;}
+#footer .toTop {display:block; width:41px; height:41px; background:#333; color:#ddd; font-size:25px; text-align:center; text-decoration:none; position:absolute; right:20px; top:20px;}
+#footer .toTop:hover {color:#fff;}
+
+#content {order:2; width:98%; max-width:1900px; margin:0 auto;
+  display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between;
+}
+#leftPanel {order:1; width:16%; background:#fff; margin-bottom:20px; border:1px solid #ccc;}
+#leftPanel h2 {font:700 25px/40px 'Open Sans', sans-serif; color:#2ab; padding:0 20px; margin:0;}
+#leftPanel h3 {font:700 12px/20px 'Open Sans', sans-serif; color:#2ab; padding:0 20px; margin:0;}
+#leftPanel p {font:300 16px/25px 'Open Sans', sans-serif; color:#333; padding:5px 20px; margin:0;}
+
+#rightPanel {order:3; width:16%; background:#fff; margin-bottom:20px; border:1px solid #ccc;}
+#rightPanel h2 {font:700 25px/40px 'Open Sans', sans-serif; color:#2ab; padding:0 20px; margin:0;}
+#rightPanel p {font:300 16px/25px 'Open Sans', sans-serif; color:#333; padding:5px 20px; margin:0;}
+
+#centerPanel {order:3; width:66%;
+  display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between;
+}
+.midcol {width:32%; background:#fff; background:#fff; margin-bottom:20px; padding-bottom:10px; border:1px solid #ccc; position:relative;}
+.midcol p {padding:0; margin:20px 5%; font:400 10px/12px 'Open Sans', sans-serif; color:#333; }
+.midcol h1 {padding:0; margin:5px 0 0 30px; font:400 16px/18px 'Open Sans', sans-serif; color:#2ab;}
+.midcol h2 {padding:0; margin:0 0 0 30px; font:400 10px/12px 'Open Sans', sans-serif; color:#2ab;}
+.midcol p.infopanel {padding:0 0 0 30px; margin:0 5%; }
+.midcol p.infopanel a.aut {color:#2ab; text-decoration:none;}
+.midcol p.infopanel a.aut:hover {text-decoration:underline;}
+.midcol p.infopanel a.cat {color:#2ab;}
+.midcol p.infopanel::before {content:""; display:block; width:20px; height:3px; background:#2ab; position:absolute; left:0; top:13px;}
+
+.maxcol {width:67%; background:#fff; background:#fff; margin-bottom:20px; padding-bottom:60px; border:1px solid #ccc; position:relative;}
+.maxcol p {padding:0; margin:20px 5%; font:400 10px/12px 'Open Sans', sans-serif; color:#333;}
+.maxcol p.infopanel {padding:0 0 0 30px; margin:0 5%; position:absolute; left:0; bottom:20px;}
+.maxcol p.infopanel a.aut {color:#2ab; text-decoration:none;}
+.maxcol p.infopanel a.aut:hover {text-decoration:underline;}
+.maxcol p.infopanel a.cat {color:#2ab;}
+.maxcol p.infopanel::before {content:""; display:block; width:20px; height:3px; background:#2ab; position:absolute; left:0; top:7px;}
+ 
+.lrgcol {width:100%; background:#fff; background:#fff; margin-bottom:20px; padding-bottom:60px; border:1px solid #ccc; position:relative;}
+.lrgcol p {padding:0; margin:20px 5%; font:400 10px/12px 'Open Sans', sans-serif; color:#333;;}
+.lrgcol p.infopanel {padding:0 0 0 30px; margin:0 5%; position:absolute; left:0; bottom:20px;}
+.lrgcol p.infopanel a.aut {color:#2ab; text-decoration:none;}
+.lrgcol p.infopanel a.aut:hover {text-decoration:underline;}
+.lrgcol p.infopanel a.cat {color:#2ab;}
+.lrgcol p.infopanel::before {content:""; display:block; width:20px; height:3px; background:#2ab; position:absolute; left:0; top:7px;}
+
+.keuzes {height: 20px; text-align:center;}
+.keuzes ul {list-style-type:none; }
+.keuzes ul li {display: inline; width: auto;}
+.keuzes a {font:400 10px 'Open Sans', sans-serif; color: #2ab; text-decoration:none; padding:0 5px 0 5px;}
+.keuzes a:hover {border-bottom: 2px solid #2ab;}
+
+.imgl {float: left; display:block; margin: 5px 10px 0px 10px;}
+.imgr {float: right; display:block; margin: 5px 10px 0px 10px;}
+.txtpanel {float: right; display:block; font:400 16px/20px 'Open Sans', sans-serif;}
+.datepanel {float: center; display:block; font:400 10px/12px 'Open Sans', sans-serif; color:#2ab;}
+
+#lowerPanel {order:4; width:calc(66% * 0.98); margin:0 auto 20px auto;
+  display:flex; flex-direction:row; flex-wrap:wrap; justify-content:space-between;
+}
+#lowerPanel .icon {width:9%; border:1px solid #ccc; background:#fff;}
+#lowerPanel .icon img {display:block; width:100%;}
+
+#infoPanel {order:2; width:calc(66% * 0.98); margin:0 auto 20px auto; border:1px solid #ccc; background:#fff; padding-bottom:20px;
+  display:flex; flex-direction:column; flex-wrap:nowrap; justify-content:space-between;
+}
+
+@media only screen and (max-width: 1200px) {
+#infoPanel {width:98%;}
+#leftPanel {width:100%;}
+#centerPanel {width:74%;}
+#rightPanel {width:24.5%;}
+#lowerPanel {width:98%;}
+}
+@media only screen and (max-width: 1000px) {
+#header img {height:75px; left:5px;}
+#header h1 {text-align:center; font:700 30px/60px 'Open Sans', sans-serif; color:#2ab;}
+#header h1 span {text-align:center; font:300 30px/60px 'Open Sans', sans-serif; color:#333;}
+.midcol {width:49%;}
+#centerPanel .midcol:nth-of-type(1) {order:1;}
+#centerPanel .midcol:nth-of-type(2) {order:3;}
+#centerPanel .midcol:nth-of-type(3) {order:2;}
+#centerPanel .midcol:nth-of-type(4) {order:4;}
+#centerPanel .midcol:nth-of-type(5) {order:5;}
+#centerPanel .midcol:nth-of-type(6) {order:6;}
+#centerPanel .midcol:nth-of-type(7) {order:7;}
+#centerPanel .midcol:nth-of-type(8) {order:8;}
+#centerPanel .midcol:nth-of-type(9) {order:9;}
+}
+@media only screen and (max-width: 800px) {
+#centerPanel {width:100%;}
+#rightPanel {width:100%;}
+.midcol {width:32%;}
+#centerPanel .midcol:nth-of-type(1) {order:1;}
+#centerPanel .midcol:nth-of-type(2) {order:2;}
+#centerPanel .midcol:nth-of-type(3) {order:3;}
+}
+@media only screen and (max-width: 640px) {
+#menuBox #menuLeft {width:0; display:none;}
+#menuBox #menuRight {width:100%;}
+.midcol {width:49%;}
+#centerPanel .midcol:nth-of-type(1) {order:1;}
+#centerPanel .midcol:nth-of-type(2) {order:3;}
+#centerPanel .midcol:nth-of-type(3) {order:2;}
+#lowerPanel .icon {width:18%; margin:4px 0;}
+#footer .toTop {right:5px; top:5px; height:30px; width:30px; font-size:20px;}
+}
+@media only screen and (max-width: 480px) {
+.midcol {width:100%;}
+#header h1 {font:700 30px/35px 'Open Sans', sans-serif;}
+#header h1 span {display:block; font:300 30px/35px 'Open Sans', sans-serif;}
+}
+</style>
+
+
+
+</head>
+
+<body id="homepage">
+<input id="menuPanel" type="checkbox" name="menuPanel">
+
+<div id="wrapper" onclick="">
+	<div id="infoPanel">
+		<div class="keuzes">
+			<ul>
+				<li><a href="pr1-1.html" title="">PzKpfw I, II & 38t</a></li>
+				<li><a href="jp1-1.html" title="">PzKpfw III & IV</a></li>
+				<li><a href="st1-1.html" title="">PzKpfw V, VI & VII-B</a></li>
+				<li><a href="pz7-1.html" title="">StuG, StuH & JPz</a></li>
+				<li><a href="pz6-1.html" title="">Prototypes</a></li>
+				<li><a href="pz5-1.html" title="">Specials</a></li>
+			</ul>	
+		</div>
+	</div>
+	<div id="content">
+		<div id="centerPanel">
+			<div class="maxcol">
+				<a href="#url"><img src="img/300/pz1a.png" alt="" title=""></a>
+				<p class="infopanel">PzKpfw. I ausf. A</p>
+			</div>
+			<div class="midcol">
+				<p class="infopanel"><a class="cat" >Informatie</a></p>
+				<p>kanon</p>
+				<p>motor</p>
+			</div>
+			<div class="midcol">
+				<p class="infopanel">
+					<h1>Go West!</h1>
+					<img class="imgr" src="img/008/008.png" alt="" title=""></a>
+					<p>Engines rumbling, the Wehrmacht starts its attack toward France</p>
+					<h2>Date: 16/01/2017</h2>
+				</p>
+			</div>
+			<div class="lrgcol">
+				<p class="txtpanel">Pzkpfw. II ausf. C</p>
+				<a href="#url"><img src="img/300/pz2c.png" alt="" title=""></a>
+			</div>
+			<div class="maxcol">
+				<a href="#url"><img src="images/z6.jpg" alt="" title=""></a>
+				<p class="txtpanel">"Everything here is what you can buy in the shops; it's just that we're very lucky and have a lot of them.</p>
+				<p class="infopanel">Photo <a class="aut" href="#url">Stu Nicholls</a><br>
+				Date 16/01/2017 | <a class="cat" href="#url">Set 1</a></p>
+			</div>
+			<div class="midcol">
+				<p class="infopanel"><a class="cat" href="www.gmail.com">Gmail</a></p>
+			</div>
+
+			<div class="midcol">
+				<p class="txtpanel">Rabobank</p>
+				<a class="cat" href="www.rabobank.nl"><img src="rabobank.jpg"></a>
+			</div>
+			<div class="midcol">
+				<p class="txtpanel">Nederlandse tank-modelbouwbereniging</p>
+				<p class="infopanel"><a class="cat" href="www.twenot.nl">TWENOT</a></p>
+			</div>
+			<div class="midcol">
+				<a href="#url"><img src="images/z4.jpg" alt="" title=""></a>
+				<p class="txtpanel">As fun as it might seem, even Lego model-makers have deadlines and budgets. </p>
+				<p class="infopanel">Photo <a class="aut" href="#url">Stu Nicholls</a><br>
+				Date 16/01/2017 | <a class="cat" href="#url">Set 1</a></p>
+			</div>
+			<div class="midcol">
+				<a href="#url"><img src="images/z5.jpg" alt="" title=""></a>
+				<p class="txtpanel">"We have to buy in all our bricks, the same as everyone else, so we have to work out how many hours and bricks each model will take".</p>
+				<p class="infopanel">Photo <a class="aut" href="#url">Stu Nicholls</a><br>
+				Date 16/01/2017 | <a class="cat" href="#url">Set 1</a></p>
+			</div>
+			<div class="maxcol">
+				<a href="#url"><img src="images/z6.jpg" alt="" title=""></a>
+				<p class="txtpanel">"Everything here is what you can buy in the shops; it's just that we're very lucky and have a lot of them.</p>
+				<p class="infopanel">Photo <a class="aut" href="#url">Stu Nicholls</a><br>
+				Date 16/01/2017 | <a class="cat" href="#url">Set 1</a></p>
+			</div>
+			<div class="midcol">
+				<a href="#url"><img src="images/z7.jpg" alt="" title=""></a>
+				<p class="txtpanel">The idea is that if you come to the park and you see something you like, if you have enough bricks, you could produce that yourself.</p>
+				<p class="infopanel">Photo <a class="aut" href="#url">Stu Nicholls</a><br>
+				Date 16/01/2017 | <a class="cat" href="#url">Set 1</a></p>
+			</div>
+			<div class="midcol">
+				<a href="#url"><img src="images/z9.jpg" alt="" title=""></a>
+				<p class="txtpanel">The glue is vital only because little fingers can't resist fiddling.</p>
+				<p class="infopanel">Photo <a class="aut" href="#url">Stu Nicholls</a><br>
+				Date 16/01/2017 | <a class="cat" href="#url">Set 1</a></p>
+			</div>
+		</div>
+		<div id="leftPanel">
+			<h2>Panzer</h2>
+			<h3>I, II & 38(t)</h3>
+			<p>The first German tanks. These things were actually quite weak and underarmed, when compared to their contemporaries.</p>
+			<p>The French Somua S-35, for example, was more heavily armoured, had a better gun and a bigger engine. Like the British Mathida, really.</p>
+			<p>Still, they had their advantages and won the Blitzkrieg. No, there were hardly any Panzer IIIs or IVs involved.</p>
+		</div>
+		<div id="rightPanel">
+			</div>
+	</div>
+
+	<div id="lowerPanel">
+		<div class="icon">
+			<a href="#url"><img src="icons/behance.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/facebook.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/instagram.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/like.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/mac.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/rss.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/skype.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/soundcloud.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/twitter.png" alt="" title=""></a>
+		</div>
+		<div class="icon">
+			<a href="#url"><img src="icons/windows.png" alt="" title=""></a>
+		</div>
+	</div>
+
+	<div id="header">
+		<a href="https://search.google.com/search-console/mobile-friendly?id=-qDOe1JWk0myCaSmUtHC9A"><img src="icons/mobile-friendly.jpg" alt="" title="Google Mobile-Friendly Tested"></a>
+		<h1><span>My Little </span>Panzer</h1>
+		<label class="menu" for="menuPanel" title="Menu">
+			<div class="bar"></div>
+		</label>
+		<div id="menuBox">
+			<div id="menuLeft">
+				<h1>My Little Panzer</h1>
+				<div id="social">
+					<a href="#url"><i class="fa fa-facebook social"></i></a>
+					<a href="#url"><i class="fa fa-twitter social"></i></a>
+					<a href="#url"><i class="fa fa-linkedin social"></i></a>
+					<a href="#url"><i class="fa fa-google-plus social"></i></a>
+				</div>
+				<p>&copy; Martijn Proper</p>
+			</div>
+			<div id="menuRight">
+				<ul>
+					<li><a class="home" href="#url">Home</a></li>
+					<li><a class="about" href="#url">About</a></li>
+					<li><a href="pz4-1.html" title="">Camouflage</a></li>
+					<li><a href="pz3-1.html" title="">Pictures</a></li>
+					<li><a href="pz38-1.html" title="">Information</a></li>
+					<li><a href="pz2-1.html" title="">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div id="footer">
+		<h3>2017 - Martijn Proper</h3><a href="#wrapper" class="toTop" title="Top of page"><i class="fa fa-chevron-up"></i></a>
+	</div>
+
+
+</div>
+</body>
+</html>
